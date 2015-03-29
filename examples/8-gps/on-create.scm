@@ -1,0 +1,11 @@
+
+(require kawa.android.mainact)
+(define mydir (loaddir *activity*))
+(define sa string-append)
+(define llclassfile (sa mydir "/locationclass.scm"))
+(load (sa mydir "/cdl.scm"))
+(define llclass (compiledexload "llclass" llclassfile))
+(load (sa mydir "/viewutils.scm"))
+(load (sa mydir "/gps.scm"))
+(load (sa mydir "/gpsbutton.scm"))
+(load (sa mydir "/telnetrepl.scm"))

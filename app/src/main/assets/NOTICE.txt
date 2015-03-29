@@ -1,0 +1,22 @@
+
+This source code is licensed under the Apache License, Version 2.0.
+
+Copyright (C) 2015 Francisco Rafael Leon
+
+ *** This software includes compiled jar files with separate licenses. ***
+
+dx.jar is licensed under the Apache License, Version 2.0.
+
+Copyright (C) 2007 The Android Open Source Project
+
+The license for the Kawa software is the MIT license which is quoted below.
+
+The software (with related files and documentation) in these packages
+are copyright (C) 1996-2009  Per Bothner.
+
+jsoup License
+
+The jsoup code-base (include source and compiled packages) are
+distributed under the open source MIT license as described below.
+
+Copyright © 2009 - 2014 Jonathan Hedley (jonathan@hedley.net)

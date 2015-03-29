@@ -1,0 +1,42 @@
+apply plugin: 'com.android.application'
+
+android {
+  compileSdkVersion 14
+  buildToolsVersion "21.1.2"
+  
+  defaultConfig {
+    applicationId "kawa.android"
+    minSdkVersion 14
+  }
+
+  task kawaBuild(type: Exec) {
+    environment['CLASSPATH'] = "libs/kawa.jar:${environment['ANDROID_HOME']}/platforms/${android.compileSdkVersion}/android.jar"
+    commandLine 'java', 'kawa.repl',          \
+    '-d', 'build/intermediates/classes/debug/',    \
+    '-P', "${android.defaultConfig.applicationId}.",  \
+    '--warn-undefined-variable',                      \
+    '--warn-invoke-unknown-method',                   \
+    '--warn-as-error',                                \
+    '-C', 'src/main/kawa/android/mainact.scm'
+  }
+ 
+  // This doesn't work with resources.
+  // Resources need to be compiled before kawa scheme code.
+  //
+  // tasks.withType(JavaCompile) {
+  //   compileTask -> compileTask.dependsOn kawaBuild
+  //}
+
+  // This works with resources. 
+  // Resources are compiled first, then scheme code. 
+  project.afterEvaluate{
+    preDexDebug.dependsOn kawaBuild
+  }
+}
+
+dependencies {
+  compile 'com.google.android.gms:play-services:6.5.87'
+  compile files('libs/kawa.jar')
+  compile files('libs/dx.jar')
+  compile files('libs/jsoup.jar')
+}
