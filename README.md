@@ -13,8 +13,9 @@ The current set of examples is:
 5. A binary HTTP client which downloads and displays a live webcam image.
 6. jsoup for XML parsing to extract and display links as clickable text.
 7. Compiling, dexing and loading of java bytecode from scheme text files.
-8. GPS location with Fused API. Provides a synchronous interface with timouts.
-9. **OpenGLES demo** of a spinning triangle with touch events.
+8. GPS location with Fused API. Provides a synchronous interface with timeouts.
+9. **OpenGLES** demo of a spinning triangle with touch events.
+10. **OpenGLES** spinning cubes and pyramids copied from SchemeAndroidOGL.
 
 Each example is source code for the scheme interpreter and on-the-fly compiler.
 
@@ -54,6 +55,7 @@ Complete license information is in the assets directory
 **Other projects with similar goals and/or features:**
 
 + [AppDoh](https://github.com/benjisimon/app-doh)
++ [SchemeAndroidOGL](https://github.com/ecraven/SchemeAndroidOGL)
 + [android-kawa](https://github.com/abarbu/android-kawa)
 + [LambdaNative](http://www.lambdanative.org/)
 + [cocoscheme](https://play.google.com/store/apps/details?id=com.adellica.cocoscheme)
