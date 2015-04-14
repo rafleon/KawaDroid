@@ -10,7 +10,7 @@ android {
   }
 
   task kawaBuild(type: Exec) {
-    environment['CLASSPATH'] = "libs/kawa.jar:${environment['ANDROID_HOME']}/platforms/${android.compileSdkVersion}/android.jar"
+    environment['CLASSPATH'] = "libs/kawa.jar:${getSdkDirectory()}/platforms/${android.compileSdkVersion}/android.jar"
     commandLine 'java', 'kawa.repl',          \
     '-d', 'build/intermediates/classes/debug/',    \
     '-P', "${android.defaultConfig.applicationId}.",  \
