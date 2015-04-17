@@ -16,6 +16,7 @@ The current set of examples is:
 8. GPS location with Fused API. Provides a synchronous interface with timeouts.
 9. **OpenGLES** demo of a spinning triangle with touch events.
 10. **OpenGLES** spinning cubes and pyramids copied from SchemeAndroidOGL.
+ll. Accelerometer/Compass to generate x,y,z unit vectors for "up" and "north".
 
 Each example is source code for the scheme interpreter and on-the-fly compiler.
 

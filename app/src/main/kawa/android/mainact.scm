@@ -34,6 +34,15 @@
       act text: message))))
 
 (define-simple-class mainact (android.app.Activity)
+  ;; on pause lambda slot
+  (opl::gnu.mapping.MethodProc access: 'private)
+  ;; if the on pause slot contains something
+  (opb::boolean access: 'private init: #f)
+  ;; on resume lambda slot
+  (orl::gnu.mapping.MethodProc access: 'private)
+  ;; if the on resume slot contains something
+  (orb::boolean access: 'private init: #f)
+  ;; init the environment, load on-create.scm, catch errors.
   ((onCreate (saved-state::android.os.Bundle))::void
    (let* ((self (this))
           (extroot (loaddir self)))
@@ -52,4 +61,17 @@
               )))
       (ex java.lang.Throwable 
           (errorbox self (exn->string ex))))
-     )))
+     ))
+  ((setonPause (newl::gnu.mapping.MethodProc))::void
+   (set! opl newl)
+   (set! opb #t))
+  ((onPause)::void
+   (invoke-special android.app.Activity (this) 'onPause)
+   (if opb (opl)))
+  ((setonResume (newl::gnu.mapping.MethodProc))::void
+   (set! orl newl)
+   (set! orb #t))
+  ((onResume)::void
+   (invoke-special android.app.Activity (this) 'onResume)
+   (if orb (orl)))
+  )

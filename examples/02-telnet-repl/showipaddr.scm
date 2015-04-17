@@ -5,13 +5,13 @@
        ;; this gets the wifi interface.
        (networkiface (java.net.NetworkInterface:getByName "wlan0"))
        (listifaceaddr (networkiface:getInterfaceAddresses))
-       (ip6addr (listifaceaddr 0))
-       (ip4addr (listifaceaddr 1))
+       ;;ip4 address is the last one. most of the time.
+       (ip4addr (listifaceaddr (- (listifaceaddr:size) 1)))
        )
   (t:set-text (string-append
                "\n"
                "Telnet to\n\n"
-               "IP address: "
+               "IP4 address: "
                ((ip4addr:getAddress):getHostAddress)
                "\n\n"
                "port number: "
