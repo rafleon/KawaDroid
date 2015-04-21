@@ -2,7 +2,7 @@
 #KawaDroid Examples
 ###"This is the Droid you are looking for."
 *****
-####A collection of [Kawa Scheme](http://www.gnu.org/software/kawa/) demos (including OpenGLES) for Android.
+####A collection of [Kawa Scheme](http://www.gnu.org/software/kawa/) demos (including OpenGLES 2.0) for Android.
 
 The current set of examples is:
 
@@ -14,9 +14,10 @@ The current set of examples is:
 6. jsoup for XML parsing to extract and display links as clickable text.
 7. Compiling, dexing and loading of java bytecode from scheme text files.
 8. GPS location with Fused API. Provides a synchronous interface with timeouts.
-9. **OpenGLES** demo of a spinning triangle with touch events.
-10. **OpenGLES** spinning cubes and pyramids copied from SchemeAndroidOGL.
+9. **OpenGLES 1.0** demo of a spinning triangle with touch events.
+10. **OpenGLES 1.0** spinning cubes and pyramids copied from SchemeAndroidOGL.
 11. Accelerometer/Compass to generate x,y,z unit vectors for "up" and "north".
+12. **OpenGLES 2.0** another spinning triangle, this time with shaders.
 
 Each example is source code for the scheme interpreter and on-the-fly compiler.
 

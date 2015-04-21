@@ -3,6 +3,9 @@
       package="kawa.android"
       android:versionCode="1"
       android:versionName="1.0">
+
+  <!-- if needed, add uses-sdk versions and uses-feature OpenGL here. -->
+
     <application android:label="KawaDroid" >
         <activity android:name="mainact" >
             <intent-filter>
