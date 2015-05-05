@@ -1,12 +1,11 @@
 
-(define GLES20::android.opengl.GLES20
-  (android.opengl.GLES20))
+(define GL20::java.lang.Class android.opengl.GLES20)
 
 (define loadShader
   (lambda (type::int shaderCode::String)
-    (let* ((shader (GLES20:glCreateShader type)))
-      (GLES20:glShaderSource shader shaderCode)
-      (GLES20:glCompileShader shader)
+    (let* ((shader (GL20:glCreateShader type)))
+      (GL20:glShaderSource shader shaderCode)
+      (GL20:glCompileShader shader)
       shader 
       )))
 
@@ -29,12 +28,12 @@
             ))
 
 (define vertexShader 
-  (loadShader GLES20:GL_VERTEX_SHADER vertexShaderCode))
+  (loadShader GL20:GL_VERTEX_SHADER vertexShaderCode))
 (define fragmentShader 
-  (loadShader GLES20:GL_FRAGMENT_SHADER fragmentShaderCode))
-(define mProgram (GLES20:glCreateProgram))
-(GLES20:glAttachShader mProgram vertexShader)
-(GLES20:glAttachShader mProgram fragmentShader)
-(GLES20:glLinkProgram mProgram)
+  (loadShader GL20:GL_FRAGMENT_SHADER fragmentShaderCode))
+(define mProgram (GL20:glCreateProgram))
+(GL20:glAttachShader mProgram vertexShader)
+(GL20:glAttachShader mProgram fragmentShader)
+(GL20:glLinkProgram mProgram)
 
 (hash-table-set! (glr:getState) 'mProgram mProgram)

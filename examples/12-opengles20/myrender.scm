@@ -7,35 +7,31 @@
 
 ;; *Almost* compatible with LWJGL version 3 for cross-platform use.
 ;; http://javadoc.lwjgl.org/
-;; Both GL11 and GL20 aliases are used to match LWJGL.
-
-;; TODO: Matrix operations are unique to Android and need to be cleaned out.
+;; TODO: Clean up shader loading and GL11/GL20 aliases.
 
 (define myr
-  (let ((mProjectionMatrix (float[] length: 16))
-        (mViewMatrix (float[] length: 16))
-        (mMVPMatrix (float[] length: 16))
-        (mRotationMatrix (float[] length: 16))
-        (mvpMatrix (float[] length: 16)))
     (lambda (width::int height::int state::kawa.lib.kawa.hashtable$HashTable)
+      ;; Both GL11 and GL20 aliases are used to match LWJGL.
       (let* ((GL11 android.opengl.GLES11)
              (GL20 android.opengl.GLES20)
-             (Matrix android.opengl.Matrix)
              (ratio (/ width height))
              (mAngle (hash-table-ref/default state 'mAngle 0))
+             (mvpcalc (hash-table-ref/default state 'mvpcalc #f))
+             (mvpMatrix (mvpcalc ratio mAngle))
              (mProgram
               (let ((temp (hash-table-ref/default state 'mProgram 0)))
                 ;; initialize the Shader, if needed.
+                ;; this works better than glsv:queueEvent 
                 (if (= 0 temp)
-                    (begin 
+                    (begin
                       (load (string-append (loaddir *activity*) "/Shader.scm"))
                       (hash-table-ref/default state 'mProgram 0))
                     temp)))
-             (mPositionHandle 
-              (GL20:glGetAttribLocation mProgram "vPosition"))
              (coords-per-vertex 3)
              (vertexCount 3)
              (vertexStride (* 4 coords-per-vertex))
+             (mPositionHandle 
+              (GL20:glGetAttribLocation mProgram "vPosition"))
              (vertexBuffer::java.nio.ByteBuffer 
               (hash-table-ref/default state 'vertexBuffer #f))
              (mColorHandle
@@ -64,17 +60,12 @@
         ;; Set color for drawing the triangle
         (GL20:glUniform4f mColorHandle 0.63671875 0.76953125 0.22265625 0.0)
         ;;  Apply the projection and view transformation
-        (Matrix:frustumM mProjectionMatrix 0 (- 0 ratio) ratio -1 1 3 7)
-        (Matrix:setLookAtM mViewMatrix 0 0 0 -3 0 0 0 0 1.0 0.0)
-        (Matrix:multiplyMM mMVPMatrix 0 mProjectionMatrix 0 mViewMatrix 0)
-        (Matrix:setRotateM mRotationMatrix 0 mAngle 0 0 1.0)
-        (Matrix:multiplyMM mvpMatrix 0 mMVPMatrix 0 mRotationMatrix 0)
         (GL20:glUniformMatrix4fv mMVPMatrixHandle 1 #f mvpMatrix 0)
         ;;Draw the triangle
         (GL11:glDrawArrays GL11:GL_TRIANGLES 0 vertexCount)
         ;;Disable vertex array
         (GL20:glDisableVertexAttribArray mPositionHandle)
-        ))))
+        )))
 
 ;; *** end renderer ***
 
@@ -94,6 +85,9 @@
 
 ;; get the current renderer object.
 (define glr::glrc (glsv:getRenderer))
+
+(load (string-append (loaddir *activity*) "/mvpMatrix.scm"))
+(hash-table-set! (glr:getState) 'mvpcalc mvpcalc)
 
 ;; set the rendering lambda.
 ;; You can reload this file from the telnet REPL.
