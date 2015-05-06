@@ -7,7 +7,7 @@
 
 ;; *Almost* compatible with LWJGL version 3 for cross-platform use.
 ;; http://javadoc.lwjgl.org/
-;; TODO: Clean up shader loading and GL11/GL20 aliases.
+;; TODO: Clean up GL11/GL20 aliases.
 
 (define myr
     (lambda (width::int height::int state::kawa.lib.kawa.hashtable$HashTable)
@@ -16,17 +16,8 @@
              (GL20 android.opengl.GLES20)
              (ratio (/ width height))
              (mAngle (hash-table-ref/default state 'mAngle 0))
-             (mvpcalc (hash-table-ref/default state 'mvpcalc #f))
              (mvpMatrix (mvpcalc ratio mAngle))
-             (mProgram
-              (let ((temp (hash-table-ref/default state 'mProgram 0)))
-                ;; initialize the Shader, if needed.
-                ;; this works better than glsv:queueEvent 
-                (if (= 0 temp)
-                    (begin
-                      (load (string-append (loaddir *activity*) "/Shader.scm"))
-                      (hash-table-ref/default state 'mProgram 0))
-                    temp)))
+             (mProgram (hash-table-ref/default state 'mProgram 0))
              (coords-per-vertex 3)
              (vertexCount 3)
              (vertexStride (* 4 coords-per-vertex))
@@ -86,8 +77,17 @@
 ;; get the current renderer object.
 (define glr::glrc (glsv:getRenderer))
 
-(load (string-append (loaddir *activity*) "/mvpMatrix.scm"))
-(hash-table-set! (glr:getState) 'mvpcalc mvpcalc)
+;; this loads mvpcalc for the renderer lambda.
+(glr:queue-lambda 
+ (lambda ()
+   (load (string-append (loaddir *activity*) "/mvpMatrix.scm"))
+   ))
+
+;; load and compile the shaders.
+(glr:queue-lambda 
+ (lambda ()
+   (load (string-append (loaddir *activity*) "/Shader.scm"))
+   ))
 
 ;; set the rendering lambda.
 ;; You can reload this file from the telnet REPL.

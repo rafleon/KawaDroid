@@ -10,22 +10,9 @@
       )))
 
 (define vertexShaderCode 
-  (string-append
-            "uniform mat4 uMVPMatrix;" 
-            "attribute vec4 vPosition;" 
-            "void main() {" 
-            "  gl_Position = uMVPMatrix * vPosition;" 
-            "}"
-            ))
-
+  (path-data (string-append (loaddir *activity*) "/vertexShader.glsl")))
 (define fragmentShaderCode 
-  (string-append
-            "precision mediump float;"
-            "uniform vec4 vColor;"
-            "void main() {"
-            "  gl_FragColor = vColor;"
-            "}"
-            ))
+  (path-data (string-append (loaddir *activity*) "/fragmentShader.glsl")))
 
 (define vertexShader 
   (loadShader GL20:GL_VERTEX_SHADER vertexShaderCode))
