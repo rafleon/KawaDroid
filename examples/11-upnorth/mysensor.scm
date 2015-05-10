@@ -23,78 +23,35 @@
 ;; create a SensorEventListener object
 (define mysel::selclass (selclass))
 
-;; some utility functions
-;; float array to list
-(define fatol
-  (lambda (a::float[])
-    (map a (iota a:length))))
-
-(define sq
-  (lambda (x)
-    (* x x)))
-
-;; apply a unary operator to a 3D float array.
-(define vecunary
-  (lambda (op a::float[])
-    (let ((retval (float[] length: 3)))
-      (set! (retval 0) (op (a 0)))
-      (set! (retval 1) (op (a 1)))
-      (set! (retval 2) (op (a 2)))
-      retval
-      )))
-
-;; apply a binary operator to two 3D float arrays.
-(define vecbinary
-  (lambda (op a::float[] b::float[])
-    (let ((retval (float[] length: 3)))
-      (set! (retval 0) (op (a 0) (b 0)))
-      (set! (retval 1) (op (a 1) (b 1)))
-      (set! (retval 2) (op (a 2) (b 2)))
-      retval
-      )))
-
-;; scale a float array into a unit vector.
-(define makeunit
-  (lambda (vec::float[])
-    (let* ((total (sqrt (apply + (fatol (vecunary sq vec)))))
-           (divtotal (lambda (x) (/ x total))))
-      (vecunary divtotal vec)
-      )))
-
-(define lastmag::float[] (float[] length: 3))
-(define lastaccel::float[] (float[] length: 3))
-
 ;; lambda for handling each SensorEvent
 (define mys
+  (let ((R (float[] length: 16))
+        (I (float[] length: 16))
+        (lastmag (float[] length: 3))
+        (lastaccel (float[] length: 3)))
   (lambda (e::android.hardware.SensorEvent)
     (if (= (e:sensor:getType) acceltype)
           (java.lang.System:arraycopy e:values 0 lastaccel 0 3))
     ;; the mag sensor has a more stable clock. 
-    ;; use it to update the UI.
+    ;; use mag to update the UI.
     (if (= (e:sensor:getType) magtype)
         (begin 
           (java.lang.System:arraycopy e:values 0 lastmag 0 3)
           ;; TODO: we should check if the mag data is realistic.
           ;; if not, ask the user to do a calibration.
-          (let* ((up (makeunit lastaccel))
-                 ;; orthonormalize the magnetic data using "up"
-                 (updotmag (apply + (fatol (vecbinary * up lastmag))))
-                 (scaleup (lambda (x) (* x updotmag)))
-                 (upscaled (vecunary scaleup up))
-                 (magnorth (makeunit (vecbinary - lastmag upscaled)))
-                 ;; TODO: insert correction for magnetic/true north.
-                 )
+          ;; TODO: insert correction for magnetic/true north.
+          (sensman:getRotationMatrix R I lastaccel lastmag)
           (tv:set-text (string-append
-                         "Up is: \n"
-                         (format #f "x: ~8,5F \n" (up 0))
-                         (format #f "y: ~8,5F \n" (up 1))
-                         (format #f "z: ~8,5F \n" (up 2))
-                         "Magnetic North is: \n"
-                         (format #f "x: ~8,5F \n" (magnorth 0))
-                         (format #f "y: ~8,5F \n" (magnorth 1))
-                         (format #f "z: ~8,5F \n" (magnorth 2))
-                         )))))
-    ))
+                        "Up is: \n"
+                        (format #f "x: ~8,5F \n" (R 8))
+                        (format #f "y: ~8,5F \n" (R 9))
+                        (format #f "z: ~8,5F \n" (R 10))
+                        "Magnetic North is: \n"
+                        (format #f "x: ~8,5F \n" (R 4))
+                        (format #f "y: ~8,5F \n" (R 5))
+                        (format #f "z: ~8,5F \n" (R 6))
+                        ))
+          )))))
 
 (mysel:setonSensorEvent mys)
 
