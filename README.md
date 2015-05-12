@@ -17,7 +17,8 @@ The current set of examples is:
 9. **OpenGLES 1.0** demo of a spinning triangle with touch events.
 10. **OpenGLES 1.0** spinning cubes and pyramids copied from SchemeAndroidOGL.
 11. Accelerometer/Compass to generate x,y,z unit vectors for "up" and "north".
-12. **OpenGLES 2.0** another spinning triangle, this time with shaders.
+12. **OpenGLES 2.0** of the same spinning triangle, this time with shaders.
+13. **OpenGLES 2.0** Pyramid with accel/compass. Red side faces north.
 
 Each example is source code for the scheme interpreter and on-the-fly compiler.
 

@@ -1,0 +1,20 @@
+(define mvpcalc
+  (let ((Matrix android.opengl.Matrix)
+        (mProjectionMatrix (float[] length: 16))
+        (mViewMatrix (float[] length: 16))
+        (mMVPMatrix (float[] length: 16))
+        (mvpMatrix (float[] length: 16))
+        (zoom 2)
+        )
+    (lambda (ratio mRotationMatrix)
+      (Matrix:frustumM mProjectionMatrix 0 
+                       (/ (- 0 ratio) zoom) 
+                       (/ ratio zoom)
+                       (/ -1 zoom)
+                       (/ 1 zoom)
+                       1 7)
+      (Matrix:setLookAtM mViewMatrix 0 0 0 3 0 0 0 0 1.0 0.0)
+      (Matrix:multiplyMM mMVPMatrix 0 mProjectionMatrix 0 mViewMatrix 0)
+      (Matrix:multiplyMM mvpMatrix 0 mMVPMatrix 0 mRotationMatrix 0)
+      mvpMatrix
+      )))
